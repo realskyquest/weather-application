@@ -35,7 +35,3 @@ searchBtn.addEventListener("click", () => {
       console.log(error);
     });
 });
-Run Pen
-
-
-Resources
