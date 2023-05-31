@@ -1,5 +1,5 @@
 function getWeatherData(location) {
-  const apiKey = "6eb1180161eccb06843669dbee0f87b3";
+  const apiKey = "783475facc469d6d5dcebeda86e23878";
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
   return fetch(url)
     .then(response => response.json())
