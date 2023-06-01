@@ -135,7 +135,7 @@
   		const condition = document.querySelector("#condition");
   		const location = document.querySelector("#location");
 		
-		temperature.textContent = `${weatherData.temperature}°C (${celsiusToFahrenheit(weatherData.temperature)}°F)`;
+		temperature.textContent = `${weatherData.temperature}°C (${celsiusToFahrenheit(weatherData.temperature).toFixed(2)}°F)`;
 		humidity.textContent = `Humidity: ${weatherData.humidity}%`;
         windspeed.textContent = `Wind Speed: ${weatherData.windspeed.toFixed(2)} m/s (${mpsToKmph(weatherData.windspeed).toFixed(2)} km/h, ${mpsToMph(weatherData.windspeed).toFixed(2)} mph)`;
   		condition.textContent = `Condition: ${weatherData.condition} `;
