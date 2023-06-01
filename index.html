@@ -59,6 +59,7 @@
     	   </div>
     	<input type="text" placeholder="Enter a location" id="search-bar">
     	<button id="search-btn">Search</button>
+	<p id="error"></p>
     </div>
     
     <script>
@@ -101,9 +102,13 @@
   	  const location = searchBar.value;
   	  getWeatherData(location)
         .then(weatherData => {
+          const msgError = document.querySelector("#error");
+          msgError.textContent = ""
           updateUI(weatherData);
         })
         .catch(error => {
+	  const msgError = document.querySelector("#error");
+          msgError.textContent = error
           console.log(error);
         });
     });
