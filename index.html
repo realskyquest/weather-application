@@ -42,19 +42,17 @@
 </head>
 <body>
 	<div class="weather-container">
-    	<div class="weather-box">
-      		<h2 id="temperature"></h2>
-            <p id="humidity"></p>
-            <p id="windspeed"></p>
+    	   <div class="weather-box">
+      	        <h2 id="temperature"></h2>
+                <p id="humidity"></p>
+                <p id="windspeed"></p>
       		<p id="condition"></p>
       		<p id="location"></p>
-            <img src="" id="map-image">
-    	</div>
+    	   </div>
     	<input type="text" placeholder="Enter a location" id="search-bar">
     	<button id="search-btn">Search</button>
     </div>
     
-     <script src="https://cdn.jsdelivr.net/npm/ol@6.5.0/dist/ol.js"></script>
     <script>
     function getWeatherData(location) {
   		const apiKey = "783475facc469d6d5dcebeda86e23878";
@@ -80,33 +78,12 @@
         const windspeed = document.querySelector("#windspeed");
   		const condition = document.querySelector("#condition");
   		const location = document.querySelector("#location");
-		  const mapImage = document.querySelector("#map-image"); // Add an image element in your HTML with id="map-image"
-
+		
   		temperature.textContent = `${weatherData.temperature}°C`;
         humidity.textContent = `Humidity: ${weatherData.humidity}%`;
 		windspeed.textContent = `Wind Speed: ${weatherData.windspeed} m/s`;
   		condition.textContent = `Condition: ${weatherData.condition} `;
   		location.textContent = weatherData.location;
-        
-       
-       const latitude = weatherData.latitude;
-        const longitude = weatherData.longitude;
-
-        // Create a map with OpenLayers
-        const map = new ol.Map({
-            target: 'map',
-            layers: [
-                new ol.layer.Tile({
-                    source: new ol.source.OSM(),
-                }),
-            ],
-            view: new ol.View({
-                center: ol.proj.fromLonLat([longitude, latitude]),
-                zoom: 14,
-            }),
-        });
-       
-       
 	}
     
 	const searchBtn = document.querySelector("#search-btn");
