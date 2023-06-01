@@ -1,20 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Weather App</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Application</title>
+    <style>
+    	@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap');
+    	body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .weather-container {
+            text-align: center;
+        }
+
+        .weather-box {
+            background-color: #f3f3f3;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        h2 {
+            font-family: Oswald, sans-serif;
+            color: #333333;
+        }
+
+        p {
+            font-family: "Public Sans", sans-serif;
+            color: #333333;
+        }
+
+        #search-bar, #search-btn {
+            font-family: "Public Sans", sans-serif;
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="weather-container">
-    <div class="weather-box">
-      <h2 id="temperature"></h2>
-      <p id="condition"></p>
-      <p id="location"></p>
+	<div class="weather-container">
+    	<div class="weather-box">
+      		<h2 id="temperature"></h2>
+            <p id="humidity"></p>
+            <p id="windspeed"></p>
+      		<p id="condition"></p>
+      		<p id="location"></p>
+            <img src="" id="map-image">
+    	</div>
+    	<input type="text" placeholder="Enter a location" id="search-bar">
+    	<button id="search-btn">Search</button>
     </div>
-    <input type="text" placeholder="Enter a location" id="search-bar">
-    <button id="search-btn">Search</button>
-  </div>
-  <script src="app.js"></script>
+    
+    <script>
+    function getWeatherData(location) {
+  		const apiKey = "783475facc469d6d5dcebeda86e23878";
+  		const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
+  		return fetch(url)
+    		.then(response => response.json())
+    		.then(data => {
+      			const weatherData = {
+        			temperature: data.main.temp,
+        			humidity: data.main.humidity,
+        			windspeed: data.wind.speed,
+        			condition: data.weather[0].main,
+        			location: data.name,
+                    coordinates: data.coord
+      			};
+      		return weatherData;
+    	});
+	}
+    
+    function getLocationImage(coordinates) {
+  const url = `https://www.openstreetmap.org/export/embed.html?bbox=${coordinates.lon - 0.02},${coordinates.lat - 0.02},${coordinates.lon + 0.02},${coordinates.lat + 0.02}&layer=mapnik`;
+  return Promise.resolve(url);
+}
+    
+	function updateUI(weatherData) {
+  		const temperature = document.querySelector("#temperature");
+        const humidity = document.querySelector("#humidity");
+        const windspeed = document.querySelector("#windspeed");
+  		const condition = document.querySelector("#condition");
+  		const location = document.querySelector("#location");
+		  const mapImage = document.querySelector("#map-image"); // Add an image element in your HTML with id="map-image"
+
+  		temperature.textContent = `${weatherData.temperature}°C`;
+        humidity.textContent = `Humidity: ${weatherData.humidity}%`;
+		windspeed.textContent = `Wind Speed: ${weatherData.windspeed} m/s`;
+  		condition.textContent = `Condition: ${weatherData.condition} `;
+  		location.textContent = weatherData.location;
+        
+        // Get latitude and longitude of the location from the weather data
+  const latitude = weatherData.latitude;
+  const longitude = weatherData.longitude;
+
+  // Construct the URL for the OpenStreetMap image
+  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01}%2C${latitude - 0.01}%2C${longitude + 0.01}%2C${latitude + 0.01}&layer=mapnik&marker=${latitude}%2C${longitude}`;
+
+  // Set the source of the map image
+  mapImage.src = mapUrl;
+	}
+    
+	const searchBtn = document.querySelector("#search-btn");
+	const searchBar = document.querySelector("#search-bar");
+
+	searchBtn.addEventListener("click", () => {
+  	  const location = searchBar.value;
+  	  getWeatherData(location)
+        .then(weatherData => {
+          updateUI(weatherData);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    });
+    </script>
 </body>
 </html>
