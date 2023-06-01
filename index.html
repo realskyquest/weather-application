@@ -54,6 +54,7 @@
     	<button id="search-btn">Search</button>
     </div>
     
+     <script src="https://cdn.jsdelivr.net/npm/ol@6.5.0/dist/ol.js"></script>
     <script>
     function getWeatherData(location) {
   		const apiKey = "783475facc469d6d5dcebeda86e23878";
@@ -73,11 +74,6 @@
     	});
 	}
     
-    function getLocationImage(coordinates) {
-  const url = `https://www.openstreetmap.org/export/embed.html?bbox=${coordinates.lon - 0.02},${coordinates.lat - 0.02},${coordinates.lon + 0.02},${coordinates.lat + 0.02}&layer=mapnik`;
-  return Promise.resolve(url);
-}
-    
 	function updateUI(weatherData) {
   		const temperature = document.querySelector("#temperature");
         const humidity = document.querySelector("#humidity");
@@ -92,15 +88,25 @@
   		condition.textContent = `Condition: ${weatherData.condition} `;
   		location.textContent = weatherData.location;
         
-        // Get latitude and longitude of the location from the weather data
-  const latitude = weatherData.latitude;
-  const longitude = weatherData.longitude;
+       
+       const latitude = weatherData.latitude;
+        const longitude = weatherData.longitude;
 
-  // Construct the URL for the OpenStreetMap image
-  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${longitude - 0.01}%2C${latitude - 0.01}%2C${longitude + 0.01}%2C${latitude + 0.01}&layer=mapnik&marker=${latitude}%2C${longitude}`;
-
-  // Set the source of the map image
-  mapImage.src = mapUrl;
+        // Create a map with OpenLayers
+        const map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM(),
+                }),
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([longitude, latitude]),
+                zoom: 14,
+            }),
+        });
+       
+       
 	}
     
 	const searchBtn = document.querySelector("#search-btn");
