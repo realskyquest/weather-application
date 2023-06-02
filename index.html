@@ -52,7 +52,7 @@
 		margin: 0;
 	  }
 
-	  #pressure {
+	  #atom {
 		font-size: 20px;
 		margin: 0;
 	  }
@@ -119,7 +119,7 @@
       <div class="weather-box">
 		<p id="temperature">Temperature: N/A</p>
 		<p id="humidity">Humidity: N/A</p>
-		<p id="pressure">Pressure: N/A</p>
+		<p id="atom">Pressure: N/A</p>
 		<p id="visibility">Visibility: N/A</p>
 		<p id="cloudiness">Cloudiness: N/A</p>
 		<p id="windDirection">Wind Direction: N/A</p>
@@ -177,7 +177,7 @@
             const weatherData = {
 			  temperature: `Temperature: ${data.main.temp} °C`,
 			  humidity: `Humidity: ${data.main.humidity} %`,
-		          pressure: `Pressure: ${data.main.pressure}`,
+		          atom: `Pressure: ${data.main.pressure} hPa`,
 			  visibility: `Visibility: ${data.visibility} km`,
 			  cloudiness: `Cloudiness: ${data.clouds.all} %`,
 			  windDirection: `Wind Direction: ${data.wind.deg} degrees`,
@@ -192,7 +192,7 @@
       function updateUI(weatherData) {
 		const temperature = document.querySelector("#temperature");
 		const humidity = document.querySelector("#humidity");
-	        const pressure = document.querySelector("#pressure");
+	        const atom = document.querySelector("#atom");
 		const visibility = document.querySelector("#visibility");
 		const cloudiness = document.querySelector("#cloudiness");
 		const windDirection = document.querySelector("#windDirection");
@@ -203,7 +203,7 @@
 
 		temperature.textContent = weatherData.temperature;
 		humidity.textContent = weatherData.humidity;
-	        pressure.textContent = weatherData.pressure;
+	        atom.textContent = weatherData.atom;
 		visibility.textContent = weatherData.visibility;
 		cloudiness.textContent = weatherData.cloudiness;
 		windDirection.textContent = weatherData.windDirection;
