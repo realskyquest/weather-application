@@ -1,4 +1,5 @@
 # weather-application
-To use the app, get a api key from openweathermap.org, and insert it the javascript code
+Get the app from the releases, and get your api key from openweathermap.org
+To test this out, got to https://realskyquest.github.io/weather-application.html
 
-![image](https://github.com/realskyquest/weather-application/assets/135049479/382c8768-0b45-496f-ba91-e02e312ad640)
+![image](https://github.com/realskyquest/weather-application/assets/135049479/b3adc5a0-61c0-4c90-8526-240d9b2ab6a5)
