@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Application</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap");
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+        font-family: Public Sans, sans-serif;
+        color: #ffffff;
+      }
+
+      .weather-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      .weather-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: #a52a2a;
+        border-radius: 10px;
+        padding: 20px;
+      }
+
+	  #temperature {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #humidity {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #pressure {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #visibility {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #cloudiness {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #windDirection {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #windSpeed {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+	  #condition {
+		font-size: 20px;
+		margin: 0;
+	  }
+
+      #location {
+        font-size: 20px;
+        margin: 0;
+      }
+
+      #error {
+        font-size: 15px;
+        margin: 0;
+        color: #000000;
+      }
+
+      input[type="text"] {
+        padding: 10px;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: none;
+        text-align: center;
+      }
+
+      button {
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        color: #ffffff;
+        background-color: #808080;
+        cursor: pointer;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map" style="height: 400px; width: 400px; margin-right: 20px; border-radius: 20px;"></div>
+
+    <div class="weather-container">
+      <div class="weather-box">
+		<p id="temperature">Temperature: N/A</p>
+		<p id="humidity">Humidity: N/A</p>
+		<p id="pressure">Pressure: N/A</p>
+		<p id="visibility">Visibility: N/A</p>
+		<p id="cloudiness">Cloudiness: N/A</p>
+		<p id="windDirection">Wind Direction: N/A</p>
+		<p id="windSpeed">Wind Speed: N/A</p>
+		<p id="condition">Condition: N/A</p>
+        <p id="location">Location: N/A</p>
+      </div>
+      <input type="text" placeholder="Enter a location" id="search-bar" />
+      <button id="search-btn">Search</button>
+      <p id="error"></p>
+    </div>
+
+    <script>
+      var map = L.map("map").setView([0, 0], 2);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution:
+          'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }).addTo(map);
+
+      function showCity(cityName) {
+        var url =
+          "https://nominatim.openstreetmap.org/search?format=json&q=" +
+          encodeURIComponent(cityName);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+
+            if (data.length > 0) {
+              var lat = data[0].lat;
+              var lon = data[0].lon;
+
+              map.setView([lat, lon], 10);
+
+              L.marker([lat, lon]).addTo(map);
+            } else {
+              console.log("No results found for the city: " + cityName);
+            }
+          } else {
+            console.log("Request failed. Status: " + xhr.status);
+          }
+        };
+        xhr.send();
+      }
+
+      function getWeatherData(location) {
+        const apiKey = "783475facc469d6d5dcebeda86e23878";
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${apiKey}`;
+        return fetch(url)
+          .then((response) => response.json())
+          .then((data) => {
+            const weatherData = {
+			  temperature: `Temperature: ${data.main.temp} °C`,
+			  humidity: `Humidity: ${data.main.humidity} %`,
+			  visibility: `Visibility: ${data.visibility} km`,
+			  cloudiness: `Cloudiness: ${data.clouds.all} %`,
+			  windDirection: `Wind Direction: ${data.wind.deg} degrees`,
+			  windSpeed: `Wind Speed: ${data.wind.speed} m/s`,
+			  condition: `Condition: ${data.weather[0].main}`,
+              location: `Location: ${data.name}, ${data.sys.country}`,
+            };
+            return weatherData;
+          });
+      }
+
+      function updateUI(weatherData) {
+		const temperature = document.querySelector("#temperature");
+		const humidity = document.querySelector("#humidity");
+		const visibility = document.querySelector("#visibility");
+		const cloudiness = document.querySelector("#cloudiness");
+		const windDirection = document.querySelector("#windDirection");
+		const windSpeed = document.querySelector("#windSpeed");
+        const location = document.querySelector("#location");
+		const condition = document.querySelector("#condition");
+		const error = document.querySelector("#error");
+
+		temperature.textContent = weatherData.temperature;
+		humidity.textContent = weatherData.humidity;
+		visibility.textContent = weatherData.visibility;
+		cloudiness.textContent = weatherData.cloudiness;
+		windDirection.textContent = weatherData.windDirection;
+		windSpeed.textContent = weatherData.windSpeed;
+		condition.textContent = weatherData.condition;
+        location.textContent = weatherData.location;
+        showCity(document.querySelector("#search-bar").value);
+		error.textContent = "Found in database";
+      }
+
+      const searchBtn = document.querySelector("#search-btn");
+      const searchBar = document.querySelector("#search-bar");
+
+      searchBtn.addEventListener("click", () => {
+        const location = searchBar.value;
+        getWeatherData(location)
+          .then((weatherData) => {
+            updateUI(weatherData);
+          })
+          .catch((error) => {
+			var emsg = document.querySelector("#error");
+			emsg.textContent = "Error: Location not found in database";
+            console.log(error);
+          });
+      });
+    </script>
+  </body>
+</html>
