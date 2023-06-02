@@ -192,6 +192,7 @@
       function updateUI(weatherData) {
 		const temperature = document.querySelector("#temperature");
 		const humidity = document.querySelector("#humidity");
+	        const pressure = document.querySelector("#pressure");
 		const visibility = document.querySelector("#visibility");
 		const cloudiness = document.querySelector("#cloudiness");
 		const windDirection = document.querySelector("#windDirection");
@@ -202,6 +203,7 @@
 
 		temperature.textContent = weatherData.temperature;
 		humidity.textContent = weatherData.humidity;
+	        pressure.textContent = weatherData.pressure;
 		visibility.textContent = weatherData.visibility;
 		cloudiness.textContent = weatherData.cloudiness;
 		windDirection.textContent = weatherData.windDirection;
