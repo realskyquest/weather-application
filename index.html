@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather Application</title>
 
+    <!-- Include Leaflet JavaScript library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <!-- Include Leaflet CSS -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
@@ -42,45 +44,11 @@
         padding: 20px;
       }
 
-	  #temperature {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #humidity {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #atom {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #visibility {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #cloudiness {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #windDirection {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #windSpeed {
-		font-size: 20px;
-		margin: 0;
-	  }
-
-	  #condition {
-		font-size: 20px;
-		margin: 0;
-	  }
+      /* Use classes instead of IDs for styling elements with shared properties */
+      .weather-info {
+        font-size: 20px;
+        margin: 0;
+      }
 
       #location {
         font-size: 20px;
@@ -90,7 +58,7 @@
       #error {
         font-size: 15px;
         margin: 0;
-        color: #A52A2A;
+        color: #a52a2a;
       }
 
       input[type="text"] {
@@ -117,14 +85,15 @@
 
     <div class="weather-container">
       <div class="weather-box">
-		<p id="temperature">Temperature: N/A</p>
-		<p id="humidity">Humidity: N/A</p>
-		<p id="atom">Pressure: N/A</p>
-		<p id="visibility">Visibility: N/A</p>
-		<p id="cloudiness">Cloudiness: N/A</p>
-		<p id="windDirection">Wind Direction: N/A</p>
-		<p id="windSpeed">Wind Speed: N/A</p>
-		<p id="condition">Condition: N/A</p>
+        <!-- Use a class for weather info elements instead of individual IDs -->
+        <p class="weather-info" id="temperature">Temperature: N/A</p>
+        <p class="weather-info" id="humidity">Humidity: N/A</p>
+        <p class="weather-info" id="atom">Pressure: N/A</p>
+        <p class="weather-info" id="visibility">Visibility: N/A</p>
+        <p class="weather-info" id="cloudiness">Cloudiness: N/A</p>
+        <p class="weather-info" id="windDirection">Wind Direction: N/A</p>
+        <p class="weather-info" id="windSpeed">Wind Speed: N/A</p>
+        <p class="weather-info" id="condition">Condition: N/A</p>
         <p id="location">Location: N/A</p>
       </div>
       <input type="text" placeholder="Enter a location" id="search-bar" />
@@ -175,14 +144,14 @@
           .then((response) => response.json())
           .then((data) => {
             const weatherData = {
-			  temperature: `Temperature: ${data.main.temp} °C`,
-			  humidity: `Humidity: ${data.main.humidity} %`,
-		          atom: `Pressure: ${data.main.pressure} hPa`,
-			  visibility: `Visibility: ${data.visibility} km`,
-			  cloudiness: `Cloudiness: ${data.clouds.all} %`,
-			  windDirection: `Wind Direction: ${data.wind.deg} degrees`,
-			  windSpeed: `Wind Speed: ${data.wind.speed} m/s`,
-			  condition: `Condition: ${data.weather[0].main}`,
+              temperature: `Temperature: ${data.main.temp} °C`,
+              humidity: `Humidity: ${data.main.humidity} %`,
+              atom: `Pressure: ${data.main.pressure} hPa`,
+              visibility: `Visibility: ${data.visibility} km`,
+              cloudiness: `Cloudiness: ${data.clouds.all} %`,
+              windDirection: `Wind Direction: ${data.wind.deg} degrees`,
+              windSpeed: `Wind Speed: ${data.wind.speed} m/s`,
+              condition: `Condition: ${data.weather[0].main}`,
               location: `Location: ${data.name}, ${data.sys.country}`,
             };
             return weatherData;
@@ -190,28 +159,23 @@
       }
 
       function updateUI(weatherData) {
-		const temperature = document.querySelector("#temperature");
-		const humidity = document.querySelector("#humidity");
-	        const atom = document.querySelector("#atom");
-		const visibility = document.querySelector("#visibility");
-		const cloudiness = document.querySelector("#cloudiness");
-		const windDirection = document.querySelector("#windDirection");
-		const windSpeed = document.querySelector("#windSpeed");
-        const location = document.querySelector("#location");
-		const condition = document.querySelector("#condition");
-		const error = document.querySelector("#error");
+        const weatherInfoElements = document.querySelectorAll(".weather-info");
+        const locationElement = document.querySelector("#location");
+        const errorElement = document.querySelector("#error");
 
-		temperature.textContent = weatherData.temperature;
-		humidity.textContent = weatherData.humidity;
-	        atom.textContent = weatherData.atom;
-		visibility.textContent = weatherData.visibility;
-		cloudiness.textContent = weatherData.cloudiness;
-		windDirection.textContent = weatherData.windDirection;
-		windSpeed.textContent = weatherData.windSpeed;
-		condition.textContent = weatherData.condition;
-        location.textContent = weatherData.location;
+        // Update weather info
+        weatherInfoElements.forEach((element) => {
+          const infoType = element.id;
+          element.textContent = weatherData[infoType];
+        });
+
+        // Update location
+        locationElement.textContent = weatherData.location;
+
+        // Show city on the map
         showCity(document.querySelector("#search-bar").value);
-		error.textContent = "Found in database";
+
+        errorElement.textContent = "Found in database";
       }
 
       const searchBtn = document.querySelector("#search-btn");
@@ -224,8 +188,8 @@
             updateUI(weatherData);
           })
           .catch((error) => {
-			var emsg = document.querySelector("#error");
-			emsg.textContent = "Error: Location not found in database";
+            const errorElement = document.querySelector("#error");
+            errorElement.textContent = "Error: Location not found in database";
             console.log(error);
           });
       });
