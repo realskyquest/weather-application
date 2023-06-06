@@ -2,105 +2,69 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Weather Application</title>
+    <title>Page Title</title>
 
-    <!-- Include Leaflet JavaScript library -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-    <!-- Include Leaflet CSS -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
     />
-
-    <style>
-      @import url("https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;700&display=swap");
-
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 0;
-        padding: 0;
-        font-family: Public Sans, sans-serif;
-        color: #ffffff;
-      }
-
-      .weather-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        height: 100vh;
-      }
-
-      .weather-box {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background-color: #a52a2a;
-        border-radius: 10px;
-        padding: 20px;
-      }
-
-      /* Use classes instead of IDs for styling elements with shared properties */
-      .weather-info {
-        font-size: 20px;
-        margin: 0;
-      }
-
-      #location {
-        font-size: 20px;
-        margin: 0;
-      }
-
-      #error {
-        font-size: 15px;
-        margin: 0;
-        color: #a52a2a;
-      }
-
-      input[type="text"] {
-        padding: 10px;
-        margin-right: 10px;
-        border-radius: 5px;
-        border: none;
-        text-align: center;
-      }
-
-      button {
-        padding: 10px 20px;
-        border-radius: 5px;
-        border: none;
-        color: #ffffff;
-        background-color: #808080;
-        cursor: pointer;
-        margin-top: 20px;
-      }
-    </style>
   </head>
   <body>
-    <div id="map" style="height: 400px; width: 400px; margin-right: 20px; border-radius: 20px;"></div>
 
-    <div class="weather-container">
-      <div class="weather-box">
-        <!-- Use a class for weather info elements instead of individual IDs -->
-        <p class="weather-info" id="temperature">Temperature: N/A</p>
-        <p class="weather-info" id="humidity">Humidity: N/A</p>
-        <p class="weather-info" id="atom">Pressure: N/A</p>
-        <p class="weather-info" id="visibility">Visibility: N/A</p>
-        <p class="weather-info" id="cloudiness">Cloudiness: N/A</p>
-        <p class="weather-info" id="windDirection">Wind Direction: N/A</p>
-        <p class="weather-info" id="windSpeed">Wind Speed: N/A</p>
-        <p class="weather-info" id="condition">Condition: N/A</p>
-        <p id="location">Location: N/A</p>
+    <div class="w3-container w3-center w3-margin-bottom w3-dark-gray">
+      <h2>Weather Application</h2>
+    </div>
+
+    <div class="w3-row-padding w3-center w3-margin-left w3-margin-right w3-dark-gray">
+      <div class="w3-half">
+        <div class="w3-card w3-margin">
+          <div id="map" style="height: 320px;"></div>
+        </div>
       </div>
-      <input type="text" placeholder="Enter a location" id="search-bar" />
-      <button id="search-btn">Search</button>
-      <p id="error"></p>
-      <p id="error">By realskyquest</p>
+      <div class="w3-half">
+        <div class="w3-card w3-white">
+          <p class="weather-info" id="temperature">Temperature: N/A</p>
+          <p class="weather-info" id="humidity">Humidity: N/A</p>
+          <p class="weather-info" id="atom">Pressure: N/A</p>
+          <p class="weather-info" id="visibility">Visibility: N/A</p>
+          <p class="weather-info" id="cloudiness">Cloudiness: N/A</p>
+          <p class="weather-info" id="windDirection">Wind Direction: N/A</p>
+          <p class="weather-info" id="windSpeed">Wind Speed: N/A</p>
+          <p class="weather-info" id="condition">Condition: N/A</p>
+          <p id="location">Location: N/A</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="w3-container w3-center">
+      <div class="w3-row-padding w3-center w3-margin w3-dark-gray">
+        <div class="w3-half">
+          <div class="w3-card w3-margin">
+            <input type="text" placeholder="Enter a location" id="search-bar" class="w3-input" style="text-align: center;"/>
+          </div>
+        </div>
+        <div class="w3-half">
+          <div class="w3-card w3-left-align w3-margin">
+            <button id="search-btn" class="w3-button w3-block w3-gray">Search</button>
+          </div>
+        </div>
+      </div>
+      <div id="success" class="w3-panel w3-green w3-hide">
+        <p>Success: Found in database</p>
+      </div> 
+      <div id="error" class="w3-panel w3-red w3-hide">
+        <p>Error: Location not found in database</p>
+      </div>
+    </div>
+
+    <div class="w3-container w3-dark-gray">
+      <div class="w3-panel w3-leftbar w3-white">
+        <p><i>By skyquest</i> - <a href="https://github.com/realskyquest/weather-application" style="color: darkblue;">Github</a></p>
+      </div>
     </div>
 
     <script>
@@ -163,6 +127,7 @@
       function updateUI(weatherData) {
         const weatherInfoElements = document.querySelectorAll(".weather-info");
         const locationElement = document.querySelector("#location");
+        const successElement = document.querySelector("#success");
         const errorElement = document.querySelector("#error");
 
         // Update weather info
@@ -177,7 +142,8 @@
         // Show city on the map
         showCity(document.querySelector("#search-bar").value);
 
-        errorElement.textContent = "Found in database";
+        successElement.className = "w3-panel w3-green w3-animate-zoom"
+        errorElement.className = "w3-panel w3-red w3-hide"
       }
 
       const searchBtn = document.querySelector("#search-btn");
@@ -190,8 +156,10 @@
             updateUI(weatherData);
           })
           .catch((error) => {
+            const successElement = document.querySelector("#success");
             const errorElement = document.querySelector("#error");
-            errorElement.textContent = "Error: Location not found in database";
+            successElement.className = "w3-panel w3-green w3-hide"
+            errorElement.className = "w3-panel w3-red w3-animate-zoom"
             console.log(error);
           });
       });
